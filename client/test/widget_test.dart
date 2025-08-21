@@ -17,7 +17,7 @@ void main() {
 
     // Verify that the app loads successfully
     expect(find.byType(MaterialApp), findsOneWidget);
-    
+
     // Verify that the login page is displayed
     // This test will pass as long as the app builds without errors
     await tester.pump();
