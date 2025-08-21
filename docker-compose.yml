@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: musicapp_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: musicapp
+      POSTGRES_USER: musicapp_user
+      POSTGRES_PASSWORD: musicapp_password
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./server/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - musicapp_network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: musicapp_pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@musicapp.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - '8080:80'
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - musicapp_network
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+
+networks:
+  musicapp_network:
+    driver: bridge
